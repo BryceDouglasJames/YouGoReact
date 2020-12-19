@@ -1,9 +1,16 @@
 import logo from './logo.svg';
 import './App.css';
+import GlobalNav from './components/GlobalNav';
+import SearchArea from './components/SearchArea';
+import {useState} from 'react'
 
 function App() {
+  let payload = {}
+ 
   return (
     <div className="App">
+      <GlobalNav></GlobalNav>
+      <SearchArea load = {payload}></SearchArea>
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
         <p>
