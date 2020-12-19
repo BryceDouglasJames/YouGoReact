@@ -44,6 +44,11 @@ export default class SearchArea extends Component{
                     <Button variant="outline-light" type="submit" onClick = {(e) => {this.updateSearch(this.currentInput)}}>
                         Find videos
                     </Button>
+
+                    
+                </div>
+                <div className="p-3 m-auto" style = {{backgroundColor:"#282c34", border: "none"}}>
+                    <hr style={{color: "white",  width:"40vw", borderColor:"white"}} />
                 </div>
             </>
         )
