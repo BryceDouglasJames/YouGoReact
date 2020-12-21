@@ -5,12 +5,9 @@ import {Form, Button} from 'react-bootstrap'
 export default class SearchArea extends Component{
     constructor(props){
         super(props);
-        
     }
 
-    componentWillMount(){
-        this.updateSearch(null)
-    }
+    
 
     updateSearch = (e) =>{
         this.props.load.id = e 
@@ -23,12 +20,6 @@ export default class SearchArea extends Component{
             },
             body: JSON.stringify(this.props.load),
           }).then((resp) => {
-            /*if (resp.ok) {
-                resp.json().then(json => {
-                    console.log(json);
-                })
-            }*/
-
             resp = resp.text()
             console.log(resp)
         })
@@ -36,6 +27,7 @@ export default class SearchArea extends Component{
     
     
     getVideoList = () =>{
+        var idk = {}
         fetch("/videos",{
                 method: "GET",
                 headers: {
@@ -45,12 +37,23 @@ export default class SearchArea extends Component{
                 }
             }).then(res => {
                 res.text().then(text =>{
-                    this.props.videos.push = JSON.parse(text)
+                    var temp = null
+                    temp = JSON.parse(text)
+                   this.props.Setoj(temp.Searches)
+                   console.log(this.props.oj)
+                    if(this.props.videos.length !== 0){
+                        this.props.status("true")
+                    }else{
+                        console.log("help")
+                        this.getVideoList()
+                    }
                 })
+                //var temp = this.props.videos.Searches
+                
             })
-        console.log(this.props.videos)
     }
     
+ 
 
 
     render(){
@@ -70,8 +73,6 @@ export default class SearchArea extends Component{
                     <Button variant="outline-light" type="submit" onClick = {(e) => {this.updateSearch(this.currentInput); this.getVideoList()}}>
                         Find videos
                     </Button>
-
-                    
                 </div>
                 <div className="p-3 m-auto" style = {{backgroundColor:"#282c34", border: "none"}}>
                     <hr style={{color: "white",  width:"40vw", borderColor:"white"}} />
