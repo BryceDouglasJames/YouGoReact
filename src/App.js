@@ -7,20 +7,13 @@ import {useState} from 'react'
 
 function App() {
   let payload = {}
-  let VideoCache = [{
-    id:"Help",
-    name:"Bryce"
-  },
-  {
-    id:"Help2",
-    name:"Bryce2"
-  }]
- 
+  let VideoCache = []
+
   return (
     <div className="App" style = {{backgroundColor:"#282c34"}}>
       <GlobalNav></GlobalNav>
       <br></br>
-      <SearchArea load = {payload}></SearchArea>
+      <SearchArea load = {payload} videos = {VideoCache}></SearchArea>
       <VideoList videos = {VideoCache}></VideoList>
     </div>
   );

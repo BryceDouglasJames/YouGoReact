@@ -5,7 +5,6 @@ export default class VideoList extends Component{
         super(props)
     }
 
-
     render(){
         let{videos} = this.props
         if(videos.length != 0){

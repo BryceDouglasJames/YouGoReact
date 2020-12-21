@@ -5,7 +5,7 @@ import {Form, Button} from 'react-bootstrap'
 export default class SearchArea extends Component{
     constructor(props){
         super(props);
-        var currentInput
+        
     }
 
     componentWillMount(){
@@ -14,18 +14,44 @@ export default class SearchArea extends Component{
 
     updateSearch = (e) =>{
         this.props.load.id = e 
-
         fetch("/query",{
             method: "POST",
             headers: {
-              "Content-Type": "application/json",
-              "Access-Control-Allow-Origin": "*"
+                'Accept': 'application/json',
+                "Content-Type": "application/json",
+                "Access-Control-Allow-Origin": "false"
             },
             body: JSON.stringify(this.props.load),
           }).then((resp) => {
-            console.log(resp);
-          });
+            /*if (resp.ok) {
+                resp.json().then(json => {
+                    console.log(json);
+                })
+            }*/
+
+            resp = resp.text()
+            console.log(resp)
+        })
+    }    
+    
+    
+    getVideoList = () =>{
+        fetch("/videos",{
+                method: "GET",
+                headers: {
+                    'Accept': 'application/json',
+                    "Content-Type": "application/json",
+                    "Content-Type": "text/html; charset=utf-8"
+                }
+            }).then(res => {
+                res.text().then(text =>{
+                    this.props.videos.push = JSON.parse(text)
+                })
+            })
+        console.log(this.props.videos)
     }
+    
+
 
     render(){
         return(
@@ -41,7 +67,7 @@ export default class SearchArea extends Component{
                         </Form.Group>
                     </Form>
 
-                    <Button variant="outline-light" type="submit" onClick = {(e) => {this.updateSearch(this.currentInput)}}>
+                    <Button variant="outline-light" type="submit" onClick = {(e) => {this.updateSearch(this.currentInput); this.getVideoList()}}>
                         Find videos
                     </Button>
 
