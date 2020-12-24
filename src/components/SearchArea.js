@@ -10,6 +10,7 @@ export default class SearchArea extends Component{
     
 
     updateSearch = (e) =>{
+        this.props.load = {}
         this.props.load.id = e 
         fetch("/query",{
             method: "POST",
@@ -22,6 +23,7 @@ export default class SearchArea extends Component{
           }).then((resp) => {
             resp = resp.text()
             console.log(resp)
+
             this.getVideoList()
         })
     }    
@@ -40,13 +42,11 @@ export default class SearchArea extends Component{
                 res.text().then(text =>{
                     var temp = null
                     temp = JSON.parse(text)
-                    console.log(temp)
                     
-                    this.props.Setoj(temp)
-                    console.log(this.props.oj)
-
+                    this.props.Setoj(temp[0].Searches)
+                    
                     if(this.props.videos.length !== 0){
-                        this.props.status("true")
+                        
                     }else{
                         console.log("help")
                         this.getVideoList()
@@ -54,6 +54,7 @@ export default class SearchArea extends Component{
                 })
                 //var temp = this.props.videos.Searches
             })
+            this.props.status("true")
     }
     
  
@@ -62,10 +63,12 @@ export default class SearchArea extends Component{
     render(){
         return(
             <>
-                <div className = "m-auto p-3" style = {{backgroundColor: "#282c34"}}>
+                <div className = "m-auto p-3" style = {{backgroundColor: "#282c34", textAlign:"center", height: '100vh', minHeight: '100vh'}}>
                     <Form onSubmit={this.onFormSubmit}>
                         <Form.Group controlId="searchbar">
-                            <Form.Label>Email address</Form.Label>
+                            <br></br>
+                            <Form.Label className = "p-2 m-auto" style = {{color: "white", fontSize: "40px"}}>Search for your topic</Form.Label>
+                            <br></br><br></br><br></br>
                             <Form.Control className="m-auto" style = {{width:"70vw"}} type="text" placeholder="" onChange={e => this.currentInput = e.target.value}/>
                             <Form.Text className="blockquote p-4 m-auto" style={{color: "white"}}>
                                 Search your topic, no funny stuff.
@@ -73,7 +76,7 @@ export default class SearchArea extends Component{
                         </Form.Group>
                     </Form>
 
-                    <Button variant="outline-light" type="submit" onClick = {(e) => {this.updateSearch(this.currentInput);}}>
+                    <Button variant="outline-light" type="submit" onClick = {(e) => {this.getVideoList()}}>
                         Find videos
                     </Button>
                 </div>

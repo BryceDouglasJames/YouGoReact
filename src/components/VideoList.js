@@ -21,6 +21,7 @@ export default class VideoList extends Component{
                 return(
                     videos.map(item =>{
                         var youtube = "https://youtube.com/watch?v="
+                        var nail = "https://img.youtube.com/vi/"+item.VideoID+"/default.jpg"
                         // /<Card.Link href={youtube + item.VideoID} >Card Link</Card.Link>
                         return(
                             <div className = "m-auto p-4">
@@ -28,7 +29,7 @@ export default class VideoList extends Component{
                                     <Card.Body>
                                         <Card.Title><p>{item.VideoTitle}</p></Card.Title>
                 
-                                        <img className="p-3 m-auto" style={{width:"60vw"}} src = {item.ThumbnailURL} alt = "nun"/>
+                                        <img className="p-3 m-auto" style={{width:"60vw"}} src = {nail} alt = "nun"/>
 
                                         <Card.Subtitle className="mb-2 text-muted"><p></p></Card.Subtitle>
                                     
