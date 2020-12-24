@@ -22,13 +22,14 @@ export default class SearchArea extends Component{
           }).then((resp) => {
             resp = resp.text()
             console.log(resp)
+            this.getVideoList()
         })
     }    
     
     
     getVideoList = () =>{
         var idk = {}
-        fetch("/videos",{
+        fetch("/hello",{
                 method: "GET",
                 headers: {
                     'Accept': 'application/json',
@@ -39,8 +40,11 @@ export default class SearchArea extends Component{
                 res.text().then(text =>{
                     var temp = null
                     temp = JSON.parse(text)
-                   this.props.Setoj(temp.Searches)
-                   console.log(this.props.oj)
+                    console.log(temp)
+                    
+                    this.props.Setoj(temp)
+                    console.log(this.props.oj)
+
                     if(this.props.videos.length !== 0){
                         this.props.status("true")
                     }else{
@@ -49,7 +53,6 @@ export default class SearchArea extends Component{
                     }
                 })
                 //var temp = this.props.videos.Searches
-                
             })
     }
     
@@ -70,7 +73,7 @@ export default class SearchArea extends Component{
                         </Form.Group>
                     </Form>
 
-                    <Button variant="outline-light" type="submit" onClick = {(e) => {this.updateSearch(this.currentInput); this.getVideoList()}}>
+                    <Button variant="outline-light" type="submit" onClick = {(e) => {this.updateSearch(this.currentInput);}}>
                         Find videos
                     </Button>
                 </div>
@@ -79,5 +82,6 @@ export default class SearchArea extends Component{
                 </div>
             </>
         )
+        //this.updateSearch(this.currentInput);
     }
 }

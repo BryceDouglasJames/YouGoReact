@@ -23,16 +23,16 @@ export default class VideoList extends Component{
                         var youtube = "https://youtube.com/watch?v="
                         // /<Card.Link href={youtube + item.VideoID} >Card Link</Card.Link>
                         return(
-                            <div className = "m-auto p-3">
-                                <Card  className="m-auto" style={{ width: "60vw" }}>
+                            <div className = "m-auto p-4">
+                                <Card  className="m-auto" style={{ width: "70vw" }}>
                                     <Card.Body>
                                         <Card.Title><p>{item.VideoTitle}</p></Card.Title>
                 
-                                        <img className="p-3 m-3" style={{width:"30vw"}} src = {item.ThumbnailURL} alt = "nun"/>
+                                        <img className="p-3 m-auto" style={{width:"60vw"}} src = {item.ThumbnailURL} alt = "nun"/>
 
                                         <Card.Subtitle className="mb-2 text-muted"><p></p></Card.Subtitle>
                                     
-                                        <Button  className = "m-auto p-2" style = {{width:"15vw", fontSize:"20px"}} variant="light" onClick={()=>{window.open(youtube + item.VideoID)}}>
+                                        <Button  className = "m-auto p-2" style = {{fontSize:"20px"}} variant="light" onClick={()=>{window.open(youtube + item.VideoID)}}>
                                             Watch this video
                                         </Button>
                                     </Card.Body>
