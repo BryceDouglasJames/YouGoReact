@@ -3,6 +3,9 @@ import 'bootstrap/dist/css/bootstrap.min.css'
 import {Navbar, NavDropdown, Nav} from 'react-bootstrap'
 import {Link} from "react-router-dom";
 export default class GlobalNav extends Component{
+    constructor(props){
+        super(props);
+    }
 
     NavStyle = {
         color: "whote",
@@ -38,7 +41,7 @@ export default class GlobalNav extends Component{
                     <NavDropdown.Divider />
 
                     <Nav>
-                        <Nav.Link href="#UserProfile">User: Bryce</Nav.Link>
+                        <Nav.Link href="#UserProfile">User: {this.props.user}</Nav.Link>
                     </Nav>
                 </Navbar.Collapse>
             </Navbar>

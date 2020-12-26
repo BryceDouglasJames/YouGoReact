@@ -3,7 +3,7 @@ import './App.css';
 import GlobalNav from './components/GlobalNav';
 import SearchArea from './components/SearchArea';
 import VideoList from './components/VideoList';
-import {useState} from 'react'
+import {useState, useEffect} from 'react'
 import {
   BrowserRouter as Router,
   Switch,
@@ -11,6 +11,17 @@ import {
 } from "react-router-dom";
 import Login from './components/Login';
 
+const useStateWithLocalStorage =  CacheKey => {
+  const [value, setValue] = useState(
+    CacheKey.getItem(CacheKey) || ''
+  );
+ 
+  useEffect(() => {
+    CacheKey.setItem(CacheKey, value);
+  }, [value]);
+ 
+  return [value, setValue];
+};
 
 function App() {
   let payload = {}
@@ -19,43 +30,32 @@ function App() {
 
   const [showVideo, setVideo] = useState(false)
   const [obj, setObj] = useState([])
-  const [user, setUser] = useState("")
+  
+  const [user, setUser] = useStateWithLocalStorage(
+    "Currentuser"
+  )
+
+  const [loggedIn, setLogin] = useStateWithLocalStorage(
+    "SignedIn"
+  )
 
   const updateVideoList = (answer) =>{
     setVideo(answer)
   }
 
-  /*if(showVideo === false){
-    return (
-      <div className="App" style = {{backgroundColor:"#282c34"}}>
-        <GlobalNav></GlobalNav>
-        <br></br>
-        <SearchArea load = {payload} videos = {VideoCache} show = {showVideo} status = {updateVideoList} Setoj = {setObj} oj = {obj}></SearchArea>
-      </div>
-    );
-  }else{
-    return (
-      <div className="App" style = {{backgroundColor:"#282c34"}}>
-        <GlobalNav></GlobalNav>
-        <br></br>
-        <SearchArea load = {payload} videos = {VideoCache} show = {showVideo} status = {setVideo} Setoj = {setObj} oj = {obj}></SearchArea>
-        <VideoList videos = {obj} show = {showVideo} status = {updateVideoList} Setoj = {setObj} oj = {obj}></VideoList>
-      </div>
-    );
-  }*/
   return(
     <Router>
       <Switch>
         <Route exact path="/">  
-          <Login set = {setUser} userload = {userpayload}></Login>
+          <Login set = {setUser} user = {user} userload = {userpayload} logged = {loggedIn} setLogged = {setLogin}></Login>
         </Route>
         <Route path="/VideoList">
-          <GlobalNav></GlobalNav>
+          <GlobalNav user = {user} ></GlobalNav>
           <VideoList videos = {obj} show = {showVideo} status = {updateVideoList} Setoj = {setObj} oj = {obj}></VideoList>
         </Route>
         <Route path = "/search">
-          <GlobalNav></GlobalNav>
-          <SearchArea load = {payload} videos = {VideoCache} show = {showVideo} status = {setVideo} Setoj = {setObj} oj = {obj}></SearchArea>
+          <GlobalNav  user = {user}></GlobalNav>
+          <SearchArea user = {user} load = {payload} videos = {VideoCache} show = {showVideo} status = {setVideo} Setoj = {setObj} oj = {obj}></SearchArea>
         </Route>
       </Switch>
     </Router>

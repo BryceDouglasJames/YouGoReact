@@ -5,13 +5,17 @@ import {Form, Button} from 'react-bootstrap'
 export default class SearchArea extends Component{
     constructor(props){
         super(props);
+        this.currentInput = ""
+        this.updateSearch = this.updateSearch.bind(this)
+        this.getVideoList = this.getVideoList.bind(this)
     }
 
     
 
-    updateSearch = (e) =>{
-        this.props.load = {}
-        this.props.load.id = e 
+    updateSearch = () =>{
+        //this.props.load = {}
+        this.props.load.id = this.currentInput
+        this.props.load.user = this.props.user
         fetch("/query",{
             method: "POST",
             headers: {
@@ -23,7 +27,6 @@ export default class SearchArea extends Component{
           }).then((resp) => {
             resp = resp.text()
             console.log(resp)
-
             this.getVideoList()
         })
     }    
@@ -64,21 +67,23 @@ export default class SearchArea extends Component{
         return(
             <>
                 <div className = "m-auto p-3" style = {{backgroundColor: "#282c34", textAlign:"center", height: '100vh', minHeight: '100vh'}}>
-                    <Form onSubmit={this.onFormSubmit}>
+                    <Form>
                         <Form.Group controlId="searchbar">
                             <br></br>
                             <Form.Label className = "p-2 m-auto" style = {{color: "white", fontSize: "40px"}}>Search for your topic</Form.Label>
                             <br></br><br></br><br></br>
-                            <Form.Control className="m-auto" style = {{width:"70vw"}} type="text" placeholder="" onChange={e => this.currentInput = e.target.value}/>
+                            <Form.Control className="m-auto Search" style = {{width:"70vw"}} type="text" placeholder="" onChange={e => this.currentInput = e.target.value}/>
                             <Form.Text className="blockquote p-4 m-auto" style={{color: "white"}}>
                                 Search your topic, no funny stuff.
                             </Form.Text>
                         </Form.Group>
+
+                        <Button variant="outline-light SearchSubmit" type="submit" onClick = {(e)=>{this.updateSearch(this.currentInput);}}>
+                            Find videos
+                        </Button>
                     </Form>
 
-                    <Button variant="outline-light" type="submit" onClick = {(e) => {this.getVideoList()}}>
-                        Find videos
-                    </Button>
+                    
                 </div>
                 <div className="p-3 m-auto" style = {{backgroundColor:"#282c34", border: "none"}}>
                     <hr style={{color: "white",  width:"40vw", borderColor:"white"}} />
