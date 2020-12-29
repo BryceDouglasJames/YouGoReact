@@ -14,6 +14,8 @@ class Login extends Component{
         this.handleClick = this.handleClick.bind(this)
     }
 
+   
+
     getUserName = (name) =>{
         this.props.set(name)
         this.props.setLogged(true)
@@ -28,11 +30,15 @@ class Login extends Component{
             },
             body: JSON.stringify(this.props.userload),
         }).then(resp =>{
-            localStorage.setItem("SessionTimeout", 0)
-            setTimeout(alert("You are all set, "+name+"!"),2000)
-            resp = resp.text()
-            console.log(resp)
-            this.props.history.push('/search');
+            if(resp.status === 401){
+                alert("This username is currently being used. Please try again later or use another name.")
+            }else{
+                localStorage.setItem("SessionTimeout", 0)
+                setTimeout(alert("You are all set, "+name+"!"),2000)
+                resp = resp.text()
+                console.log(resp)
+                this.props.history.push('/search');
+            }
         })
     }
 
@@ -44,7 +50,7 @@ class Login extends Component{
 
     
     render(){
-        //if(this.props.logged === false || this.props.logged === null){
+        if(this.props.logged === false || this.props.logged === null || localStorage.getItem("SessionTimeout") === "0"){
             return(
                 <>
                     <div className = "m-auto p-3" style = {{backgroundColor: "#282c34", textAlign: "center", height: '100vh', minHeight: '100vh'}}>
@@ -74,7 +80,7 @@ class Login extends Component{
                     </div>
                     
                 </>
-            )/*}else{
+            )}else{
                 return(
                     <>
                         <GlobalNav></GlobalNav>  
@@ -90,7 +96,7 @@ class Login extends Component{
                 
                     </>
                 )
-            }*/
+            }
         
         // <Button variant="outline-light" type="submit" onClick = {this.getUserName(this.currentInput)}>
        // Start searching!

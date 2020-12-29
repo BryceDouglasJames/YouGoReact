@@ -33,6 +33,7 @@ function App() {
 
   const [showVideo, setVideo] = useState(false)
   const [obj, setObj] = useState([])
+  const [canFetch, setFetch] = useState(false)
   
   const [user, setUser] = useStateWithLocalStorage(
     "Currentuser"
@@ -46,47 +47,61 @@ function App() {
   const [time, setTime] = useStateWithLocalStorage(
     "SessionTimeout"
   )
-
+ 
   const updateVideoList = (answer) =>{
     setVideo(answer)
   }
 
- var myinterval = 10*1000; 
+ var myinterval = 10000;
+ 
+ var thread = 0
       
-  setInterval(function(){ 
-
+/*setInterval(()=>{
+    if(!canFetch){
+      setFetch(true)
+    } 
         var tempPayload = {User: user}
-        fetch("/hello",{
-                method: "POST",
-                headers: {
-                    'Accept': 'application/json',
-                    "Content-Type": "application/json",
-                    "Content-Type": "text/html; charset=utf-8"
-                },
-                body: JSON.stringify(tempPayload),
-            }).then(res => {
-                res.text().then(text =>{
-                    var arr = null
-                    arr = JSON.parse(text);
-                    
-                    console.log(arr.SessionTime)
-                    if(arr.SessionTime>=60000){
-                      localStorage.removeItem("SignedIn")
-                      localStorage.removeItem("SessionTimeout")
-                      localStorage.removeItem("Currentuser")
-                      setLogin(false)
-                      setUser("")
-                      setTime("")
-                      console.log(localStorage.getItem("SignedIn"))
-                      console.log(localStorage.getItem("SessionTimeout"))
-                      console.log(localStorage.getItem("Currentuser"))
-                    }else{
-                      localStorage.setItem("SessionTimeout", arr.SessionTime)
-                    }                    
-                })
-            })
-      
-  },myinterval);
+        if(canFetch){
+          fetch("/hello",{
+                  method: "POST",
+                  headers: {
+                      'Accept': 'application/json',
+                      "Content-Type": "application/json",
+                      "Content-Type": "text/html; charset=utf-8"
+                  },
+                  body: JSON.stringify(tempPayload),
+              }).then(res => {
+                  res.text().then(text =>{
+                      var arr = null
+                      arr = JSON.parse(text);
+                      if(localStorage.getItem("SignedIn") === true){
+                        setLogin(true)
+                      }
+                      
+                      if(localStorage.getItem("Videos") !== null && arr.SessionTime % 2000 == 0){
+                        setObj(JSON.parse(localStorage.getItem("Videos")))
+                      }
+                      
+                      //console.log(arr.SessionTime)
+                      if(arr.SessionTime>=60000){
+                        localStorage.removeItem("SignedIn")
+                        localStorage.removeItem("SessionTimeout")
+                        localStorage.removeItem("Currentuser")
+                        localStorage.removeItem("Videos")
+                        setLogin(false)
+                        setUser("")
+                        setTime("")
+                        console.log(localStorage.getItem("SignedIn"))
+                        console.log(localStorage.getItem("SessionTimeout"))
+                        console.log(localStorage.getItem("Currentuser"))
+                      }else{
+                        localStorage.setItem("SessionTimeout", arr.SessionTime)
+                      }                    
+                  })
+              })
+              setFetch(false)
+            }
+  },myinterval);*/
 
   const resetStorage = () =>{
       
@@ -100,10 +115,10 @@ function App() {
           <Login set = {setUser} user = {user} userload = {userpayload} logged = {loggedIn} setLogged = {setLogin} setTime = {setTime}></Login>
         </Route>
         <Route path="/VideoList">
-          <VideoList videos = {obj} user = {user} show = {showVideo} status = {updateVideoList} Setoj = {setObj} oj = {obj} loggedIn = {loggedIn} setLogged = {setLogin}></VideoList>
+          <VideoList videos = {obj} user = {user} setUser = {setUser} show = {showVideo} status = {updateVideoList} Setobj = {setObj} oj = {obj} loggedIn = {loggedIn} setLogged = {setLogin} setTime = {setTime}></VideoList>
         </Route>
         <Route path = "/search">
-          <SearchArea user = {user} load = {payload} videos = {VideoCache} show = {showVideo} status = {setVideo} Setoj = {setObj} oj = {obj} time = {time} setTime = {setTime} loggedIn = {loggedIn}></SearchArea>
+          <SearchArea user = {user} setUser = {setUser} load = {payload} videos = {obj} Setobj = {setObj} show = {showVideo} status = {setVideo} Setoj = {setObj} oj = {obj} time = {time} setTime = {setTime} loggedIn = {loggedIn} setLogged = {setLogin}></SearchArea>
         </Route>
       </Switch>
     </Router>

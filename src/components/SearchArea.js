@@ -8,7 +8,7 @@ class SearchArea extends Component{
     constructor(props){
         super(props);
         this.currentInput = ""
-        this.Click = 1
+        this.Index = 0
         this.updateSearch = this.updateSearch.bind(this)
         this.getVideoList = this.getVideoList.bind(this)
 
@@ -16,6 +16,58 @@ class SearchArea extends Component{
             userLog: this.props.loggedIn
         }
     }
+
+
+    componentDidMount(){
+        setTimeout(() =>{
+            var tempPayload = {User: this.props.user}
+            fetch("/hello",{
+                method: "POST",
+                headers: {
+                    'Accept': 'application/json',
+                    "Content-Type": "application/json",
+                    "Content-Type": "text/html; charset=utf-8"
+                },
+                body: JSON.stringify(tempPayload),
+            }).then(res => {
+                res.text().then(text =>{
+                    
+                    var arr = null
+                    arr = JSON.parse(text);
+                    console.log(text)
+                    if(localStorage.getItem("SignedIn") === true){
+                        this.props.setLogged(true)
+                    }
+
+                    
+                    
+                    if(localStorage.getItem("Videos") !== null && arr.SessionTime % 2000 == 0){
+                        this.props.Setobj(JSON.parse(localStorage.getItem("Videos")))
+                    }
+                    
+                    //console.log(arr.SessionTime)
+                    if(arr.SessionTime>=60000 || arr.SessionTime === "0"){
+                        localStorage.removeItem("SignedIn")
+                        localStorage.removeItem("SessionTimeout")
+                        localStorage.removeItem("Currentuser")
+                        localStorage.removeItem("Videos")
+                        this.props.setLogged(false)
+                        this.props.setUser("")
+                        this.props.setTime("")
+                        console.log(localStorage.getItem("SignedIn"))
+                        console.log(localStorage.getItem("SessionTimeout"))
+                        console.log(localStorage.getItem("Currentuser"))
+                    }else{
+                        localStorage.setItem("SessionTimeout", arr.SessionTime)
+                    }      
+                    
+                    
+                })
+            })
+        }, 3000)
+    
+}
+
 
     updateSearch = () =>{
         //this.props.load = {}
@@ -40,7 +92,7 @@ class SearchArea extends Component{
     
     getVideoList = () =>{
             var tempPayload = {User: this.props.user}
-            fetch("/hello",{
+            setTimeout(() => {fetch("/hello",{
                     method: "POST",
                     headers: {
                         'Accept': 'application/json',
@@ -54,33 +106,49 @@ class SearchArea extends Component{
                     }else{
                         res.text().then(text =>{
                             var arr = null
-                            arr = JSON.parse(text);
+                            var tempIndex = 0
+                            arr = JSON.parse(text)
+
+                            
                             if(arr.Searches === null){
-                                this.getVideoList()
+                                setTimeout(this.getVideoList(),1000)
                             }else{
-                                this.Click++
-                                console.log(arr.Searches)
-                                this.props.Setoj(arr.Searches)
-                                localStorage.setItem("SessionTimeout", arr.SessionTime)
+                                console.log("Okay")
+                                tempIndex = arr.Searches.length
+                                console.log("RESPONSE LENGTH: " + arr.Searches.length + " CURRENTLENGTH: " + this.props.videos.length)
+                                if(arr.Searches.length === this.props.videos.length){
+                                    console.log("WE GOING AGAIN")
+                                    setTimeout(this.getVideoList(), 1000)
+                                }else{
+                                    console.log("Cool")
+                                    this.index = tempIndex
+                                    console.log(arr.Searches)
+                                    this.props.Setoj(arr.Searches)
+                                    localStorage.setItem("SessionTimeout", arr.SessionTime)
+                                    localStorage.setItem("Videos", JSON.stringify(arr.Searches))
+                                }
                             }
                         })
                     }
                 })
-        this.props.status("true")
-        //this.props.history.push('/VideoList')
+    
+            this.props.status("true")
+            //this.props.history.push('/VideoList')
+        },2000)
     }
     
  
 
 
     render(){
-        console.log(localStorage.getItem("SessionTimeout"))
-        console.log(this.props.loggedIn)       
+        //console.log(localStorage.getItem("SessionTimeout"))
+        //console.log(this.props.loggedIn)       
         /*if(this.props.loggedIn !== true){
             this.setState({userLog: false})
         }*/
 
-        if(this.state.userLog !== true){
+        if(this.props.loggedIn !== true && localStorage.getItem("SessionTimeout") == "0"){
+
             return(            
                 <div className = "m-auto p-2" style = {{backgroundColor:"#282c34", border: "none", textAlign: "center", color:"white", height: '100vh', minHeight: '100vh'}}>
                     <br></br><br></br><br></br><br></br><br></br><br></br><br></br>
@@ -96,7 +164,7 @@ class SearchArea extends Component{
                 </div>
             )
         }else{
-            console.log(localStorage.getItem("SessionTimeout"))
+            //console.log(localStorage.getItem("SessionTimeout"))
             return(
                 <>
                     <GlobalNav user = {this.props.user}></GlobalNav>
