@@ -2,10 +2,11 @@ import React,{Component} from 'react'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import $ from 'jquery';
 import {Form, Button} from 'react-bootstrap'
-import {Link} from "react-router-dom";
+import {Link, withRouter} from "react-router-dom";
 import GlobalNav from "./GlobalNav"
 
-export default class Login extends Component{
+
+class Login extends Component{
     constructor(props){
         super(props);
         this.currentInput = ""
@@ -15,9 +16,7 @@ export default class Login extends Component{
 
     getUserName = (name) =>{
         this.props.set(name)
-        console.log(this.props.logged)
         this.props.setLogged(true)
-
         console.log(this.props.logged)
         this.props.userload.id = name
         fetch("/userpass",{
@@ -29,20 +28,23 @@ export default class Login extends Component{
             },
             body: JSON.stringify(this.props.userload),
         }).then(resp =>{
-            alert("You are all set, "+name+"!")
+            localStorage.setItem("SessionTimeout", 0)
+            setTimeout(alert("You are all set, "+name+"!"),2000)
             resp = resp.text()
             console.log(resp)
+            this.props.history.push('/search');
         })
     }
 
-    handleClick = (e) =>{
+    handleClick = (Login) =>{
+        Login.preventDefault()
         this.getUserName(this.currentInput)
-        e.cancelBubble = true;
+        Login.cancelBubble = true;
     }
 
     
     render(){
-        if(this.props.logged === false){
+        //if(this.props.logged === false || this.props.logged === null){
             return(
                 <>
                     <div className = "m-auto p-3" style = {{backgroundColor: "#282c34", textAlign: "center", height: '100vh', minHeight: '100vh'}}>
@@ -51,17 +53,17 @@ export default class Login extends Component{
                             <Form.Label className = "p-2 m-auto" style = {{color: "white", fontSize: "40px"}}>Welcome to YouGo!</Form.Label>
                             <br></br><br></br><br></br>
                             <Form.Group controlId="login">
-                                <Form.Control className="m-auto" style = {{width:"70vw"}} type="text" placeholder="" onChange={e => this.currentInput = e.target.value}/>
+                                <Form.Control className="m-auto" style = {{width:"70vw"}} type="text" placeholder="" onChange={UserLog => this.currentInput = UserLog.target.value}/>
                                 <Form.Text className="blockquote p-4 m-auto" style={{color: "white"}}>
                                     Enter a name so we can keep track of your searches 
                                 </Form.Text>
                             </Form.Group>
 
-                            <Link to="/search">
-                                <Button variant="outline-light" type="submit" value = "Submit" onClick = {(e) => this.handleClick(e)}>
+                           
+                                <Button variant="outline-light" type="submit" value = "Submit" onClick = {(Login) => {this.handleClick(Login); this.props.setTime(0)}}>
                                     Start searching!
                                 </Button>
-                            </Link>
+                    
                         
                         </Form>
 
@@ -72,7 +74,7 @@ export default class Login extends Component{
                     </div>
                     
                 </>
-            )}else{
+            )/*}else{
                 return(
                     <>
                         <GlobalNav></GlobalNav>  
@@ -88,10 +90,11 @@ export default class Login extends Component{
                 
                     </>
                 )
-            }
+            }*/
         
         // <Button variant="outline-light" type="submit" onClick = {this.getUserName(this.currentInput)}>
        // Start searching!
         //</Button>
     }
 }
+export default withRouter(Login)

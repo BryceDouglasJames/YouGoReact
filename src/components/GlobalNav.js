@@ -12,6 +12,17 @@ export default class GlobalNav extends Component{
         textDecoration: "none"
     }
 
+    /*componentDidMount(props){
+        if(!localStorage.getItem("SessionTimeout") < 1){
+            localStorage.setItem("SessionTimeout", 1)
+            this.CheckSession
+        }else{
+            this.CheckSession
+        }
+    }*/
+
+
+
     render(){  
         return(
             <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
