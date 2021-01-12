@@ -10,6 +10,7 @@ import {
   Route,
 } from "react-router-dom";
 import Login from './components/Login';
+import HomePage from './components/HomePage'
 
 var timer = {}
 
@@ -29,11 +30,9 @@ function App() {
   
   let payload = {}
   let userpayload = {}
-  let VideoCache = {}
 
   const [showVideo, setVideo] = useState(false)
   const [obj, setObj] = useState([])
-  const [canFetch, setFetch] = useState(false)
   
   const [user, setUser] = useStateWithLocalStorage(
     "Currentuser"
@@ -52,62 +51,6 @@ function App() {
     setVideo(answer)
   }
 
- var myinterval = 10000;
- 
- var thread = 0
-      
-/*setInterval(()=>{
-    if(!canFetch){
-      setFetch(true)
-    } 
-        var tempPayload = {User: user}
-        if(canFetch){
-          fetch("/hello",{
-                  method: "POST",
-                  headers: {
-                      'Accept': 'application/json',
-                      "Content-Type": "application/json",
-                      "Content-Type": "text/html; charset=utf-8"
-                  },
-                  body: JSON.stringify(tempPayload),
-              }).then(res => {
-                  res.text().then(text =>{
-                      var arr = null
-                      arr = JSON.parse(text);
-                      if(localStorage.getItem("SignedIn") === true){
-                        setLogin(true)
-                      }
-                      
-                      if(localStorage.getItem("Videos") !== null && arr.SessionTime % 2000 == 0){
-                        setObj(JSON.parse(localStorage.getItem("Videos")))
-                      }
-                      
-                      //console.log(arr.SessionTime)
-                      if(arr.SessionTime>=60000){
-                        localStorage.removeItem("SignedIn")
-                        localStorage.removeItem("SessionTimeout")
-                        localStorage.removeItem("Currentuser")
-                        localStorage.removeItem("Videos")
-                        setLogin(false)
-                        setUser("")
-                        setTime("")
-                        console.log(localStorage.getItem("SignedIn"))
-                        console.log(localStorage.getItem("SessionTimeout"))
-                        console.log(localStorage.getItem("Currentuser"))
-                      }else{
-                        localStorage.setItem("SessionTimeout", arr.SessionTime)
-                      }                    
-                  })
-              })
-              setFetch(false)
-            }
-  },myinterval);*/
-
-  const resetStorage = () =>{
-      
-      
-  }
-
   return(
     <Router>
       <Switch>
@@ -119,6 +62,9 @@ function App() {
         </Route>
         <Route path = "/search">
           <SearchArea user = {user} setUser = {setUser} load = {payload} videos = {obj} Setobj = {setObj} show = {showVideo} status = {setVideo} Setoj = {setObj} oj = {obj} time = {time} setTime = {setTime} loggedIn = {loggedIn} setLogged = {setLogin}></SearchArea>
+        </Route>
+        <Route path="/home">
+          <HomePage user = {user} setLogged = {setLogin}></HomePage>
         </Route>
       </Switch>
     </Router>

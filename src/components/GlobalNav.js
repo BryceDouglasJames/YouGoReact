@@ -7,27 +7,12 @@ export default class GlobalNav extends Component{
         super(props);
     }
 
-    NavStyle = {
-        color: "whote",
-        textDecoration: "none"
-    }
-
-    /*componentDidMount(props){
-        if(!localStorage.getItem("SessionTimeout") < 1){
-            localStorage.setItem("SessionTimeout", 1)
-            this.CheckSession
-        }else{
-            this.CheckSession
-        }
-    }*/
-
-
 
     render(){  
         return(
             <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
                 <Navbar.Brand>
-                    <Link to="/Search" style={{color: 'white', textDecoration: 'none'}}>
+                    <Link to="/home" style={{color: 'white', textDecoration: 'none'}}>
                         YouGo
                     </Link>
                 </Navbar.Brand>
@@ -35,9 +20,9 @@ export default class GlobalNav extends Component{
                 <Navbar.Toggle aria-controls="responsive-navbar-nav" />
                 <Navbar.Collapse id="responsive-navbar-nav">
                      
-                    <Nav className="m-auto p-auto mr-auto NavStyle">
+                    <Nav className="m-auto p-auto mr-auto">
                             <Nav.Link>
-                                <Link to="/VideoList" style={{color: 'white', textDecoration: 'none'}}>
+                                <Link to="/VideoList" style={{color: 'white'}}>
                                     Videos 
                                 </Link>
                             </Nav.Link>
