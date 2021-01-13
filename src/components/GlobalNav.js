@@ -3,10 +3,6 @@ import 'bootstrap/dist/css/bootstrap.min.css'
 import {Navbar, NavDropdown, Nav} from 'react-bootstrap'
 import {Link} from "react-router-dom";
 export default class GlobalNav extends Component{
-    constructor(props){
-        super(props);
-    }
-
 
     render(){  
         return(

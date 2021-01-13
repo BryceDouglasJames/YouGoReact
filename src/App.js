@@ -1,6 +1,4 @@
-import logo from './logo.svg';
 import './App.css';
-import GlobalNav from './components/GlobalNav';
 import SearchArea from './components/SearchArea';
 import VideoList from './components/VideoList';
 import {useState, useEffect} from 'react'
@@ -11,8 +9,6 @@ import {
 } from "react-router-dom";
 import Login from './components/Login';
 import HomePage from './components/HomePage'
-
-var timer = {}
 
 const useStateWithLocalStorage =  CacheKey => {
   const [value, setValue] = useState(

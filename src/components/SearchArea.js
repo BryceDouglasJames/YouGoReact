@@ -1,7 +1,7 @@
 import React,{Component} from 'react'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import {Form, Button} from 'react-bootstrap'
-import {Link, withRouter} from "react-router-dom";
+import {Link} from "react-router-dom";
 import GlobalNav from './GlobalNav';
 
 class SearchArea extends Component{
@@ -26,7 +26,6 @@ class SearchArea extends Component{
                 headers: {
                     'Accept': 'application/json',
                     "Content-Type": "application/json",
-                    "Content-Type": "text/html; charset=utf-8"
                 },
                 body: JSON.stringify(tempPayload),
             }).then(res => {
@@ -41,7 +40,7 @@ class SearchArea extends Component{
 
                     
                     
-                    if(localStorage.getItem("Videos") !== null && arr.SessionTime % 2000 == 0){
+                    if(localStorage.getItem("Videos") !== null && arr.SessionTime % 2000 === 0){
                         this.props.Setobj(JSON.parse(localStorage.getItem("Videos")))
                     }
                     
@@ -54,9 +53,6 @@ class SearchArea extends Component{
                         this.props.setLogged(false)
                         this.props.setUser("")
                         this.props.setTime("")
-                        console.log(localStorage.getItem("SignedIn"))
-                        console.log(localStorage.getItem("SessionTimeout"))
-                        console.log(localStorage.getItem("Currentuser"))
                     }else{
                         localStorage.setItem("SessionTimeout", arr.SessionTime)
                     }      
@@ -91,13 +87,13 @@ class SearchArea extends Component{
     
     
     getVideoList = () =>{
+            localStorage.setItem("Videos", null)
             var tempPayload = {User: this.props.user}
             setTimeout(() => {fetch("/hello",{
                     method: "POST",
                     headers: {
                         'Accept': 'application/json',
                         "Content-Type": "application/json",
-                        "Content-Type": "text/html; charset=utf-8"
                     },
                     body: JSON.stringify(tempPayload),
                 }).then(res => {
@@ -133,21 +129,14 @@ class SearchArea extends Component{
                 })
     
             this.props.status("true")
-            //this.props.history.push('/VideoList')
-        },2000)
+        },3000)
     }
     
  
 
 
     render(){
-        //console.log(localStorage.getItem("SessionTimeout"))
-        //console.log(this.props.loggedIn)       
-        /*if(this.props.loggedIn !== true){
-            this.setState({userLog: false})
-        }*/
-
-        if(this.props.loggedIn !== true && localStorage.getItem("SessionTimeout") == "0"){
+        if(this.props.loggedIn !== true && localStorage.getItem("SessionTimeout") === "0"){
 
             return(            
                 <div className = "m-auto p-2" style = {{backgroundColor:"#282c34", border: "none", textAlign: "center", color:"white", height: '100vh', minHeight: '100vh'}}>

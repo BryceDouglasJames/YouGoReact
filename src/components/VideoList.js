@@ -10,7 +10,8 @@ class VideoList extends Component{
         super(props)
         this.state = {
             change: false,
-            loading: false
+            loading: false,
+            novid: true
         }
     }
 
@@ -26,7 +27,6 @@ class VideoList extends Component{
                 headers: {
                     'Accept': 'application/json',
                     "Content-Type": "application/json",
-                    "Content-Type": "text/html; charset=utf-8"
                 },
                 body: JSON.stringify(tempPayload),
             }).then(res => {
@@ -38,10 +38,11 @@ class VideoList extends Component{
                     if(localStorage.getItem("SignedIn") === true){
                         this.props.setLogged(true)
                     }
-                    if(localStorage.getItem("Videos") !== null && arr.SessionTime % 2000 == 0){
+                    if(localStorage.getItem("Videos") !== null && arr.SessionTime % 2000 === 0){
                         this.props.Setobj(JSON.parse(localStorage.getItem("Videos")))
                     }
                     if(arr.SessionTime>=60000 || arr.SessionTime === "0"){
+                        console.log("AHHHH SHIT WE DONE")
                         localStorage.removeItem("SignedIn")
                         localStorage.removeItem("SessionTimeout")
                         localStorage.removeItem("Currentuser")
@@ -49,6 +50,7 @@ class VideoList extends Component{
                         this.props.setLogged(false)
                         this.props.setUser("")
                         this.props.setTime("")
+                        console.log(localStorage.getItem("Videos"))
                     }else{
                         localStorage.setItem("SessionTimeout", arr.SessionTime)
                     }       
@@ -61,7 +63,14 @@ class VideoList extends Component{
     }
 
     render(){
-        var tempVideoList = JSON.parse(localStorage.getItem("Videos"))
+        if(JSON.parse(localStorage.getItem("Videos")) === null){
+            this.setState({novid: true})
+        }else{
+            var tempVideoList = JSON.parse(localStorage.getItem("Videos"))
+            // /this.setState({novid: false})
+        }
+
+       
         if(this.state.loading){
             return(
                 <>
@@ -75,7 +84,7 @@ class VideoList extends Component{
             return(
                 <div>
                     {(()=>{
-                        if(localStorage.getItem("SessionTimeout") === "0"){
+                        if(localStorage.getItem("SessionTimeout") === "0" && this.state.novid){
                             return(
                                 <>  
                                     <div className = "m-auto p-2" style = {{backgroundColor:"#282c34", border: "none", textAlign: "center", color:"white", height: '100vh', minHeight: '100vh'}}>
@@ -96,10 +105,10 @@ class VideoList extends Component{
                                 if(localStorage.getItem("SignedIn") === false || localStorage.getItem("SignedIn") === null || localStorage.getItem("Currentuser") === ""){
                                     this.setState({change: true})
                                     this.props.setLogged(false)
+                                    this.setState({novid: true})
                                 }else if(this.props.videos !== null){
                                     tempVideoList = JSON.parse(localStorage.getItem("Videos"))
-                                    if(tempVideoList !== null && tempVideoList[0]!==null){
-                                        //console.log(this.props.videos)
+                                    if(tempVideoList !== null && tempVideoList[0]!==null && tempVideoList.length > 1){
                                         return(
                                             <>
                                                 <GlobalNav user = {this.props.user}></GlobalNav>
@@ -127,7 +136,7 @@ class VideoList extends Component{
                                                 })}  
                                             </>
                                         )   
-                                    }else{
+                                    }else if (this.state.novid){
                                         return( 
                                             <>
                                                 <GlobalNav user = {this.props.user}></GlobalNav>

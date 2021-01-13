@@ -1,8 +1,7 @@
 import React,{Component} from 'react'
 import 'bootstrap/dist/css/bootstrap.min.css'
-import $ from 'jquery';
 import {Form, Button} from 'react-bootstrap'
-import {Link, withRouter} from "react-router-dom";
+import {withRouter} from "react-router-dom";
 import GlobalNav from "./GlobalNav"
 
 
@@ -10,7 +9,6 @@ class Login extends Component{
     constructor(props){
         super(props);
         this.currentInput = ""
-
         this.handleClick = this.handleClick.bind(this)
     }
 
@@ -32,6 +30,8 @@ class Login extends Component{
         }).then(resp =>{
             if(resp.status === 401){
                 alert("This username is currently being used. Please try again later or use another name.")
+            }else if(resp.status === 403){
+                alert("Please enter a name.")
             }else{
                 localStorage.setItem("SessionTimeout", 0)
                 setTimeout(alert("You are all set, "+name+"!"),2000)
@@ -97,10 +97,6 @@ class Login extends Component{
                     </>
                 )
             }
-        
-        // <Button variant="outline-light" type="submit" onClick = {this.getUserName(this.currentInput)}>
-       // Start searching!
-        //</Button>
     }
 }
 export default withRouter(Login)
