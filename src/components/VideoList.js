@@ -22,7 +22,7 @@ class VideoList extends Component{
         //Async did not work too well... set 3 second timeout to allow proper response
         setTimeout(() =>{
             var tempPayload = {User: this.props.user}
-            fetch("/hello",{
+            fetch("/userbank/1999",{
                 method: "POST",
                 headers: {
                     'Accept': 'application/json',
