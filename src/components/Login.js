@@ -30,10 +30,13 @@ class Login extends Component{
         }).then(resp =>{
             if(resp.status === 401){
                 alert("This username is currently being used. Please try again later or use another name.")
+                window.location.reload()
             }else if(resp.status === 403){
                 alert("Please enter a name.")
+                window.location.reload()
             }else{
                 localStorage.setItem("SessionTimeout", 0)
+                localStorage.removeItem("Videos")
                 setTimeout(alert("You are all set, "+name+"!"),2000)
                 resp = resp.text()
                 console.log(resp)
@@ -83,7 +86,7 @@ class Login extends Component{
             )}else{
                 return(
                     <>
-                        <GlobalNav></GlobalNav>  
+                        <GlobalNav user = {this.props.user}></GlobalNav>  
                         <div className = "m-auto p-2" style = {{backgroundColor:"#282c34", border: "none", textAlign: "center", color:"white", height: '100vh', minHeight: '100vh'}}>
                             <br></br><br></br><br></br><br></br><br></br><br></br><br></br><br></br><br></br><br></br>
                             <h2>Hey {this.props.user}, it looks like you are signed in.</h2>   

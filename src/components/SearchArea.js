@@ -60,7 +60,7 @@ class SearchArea extends Component{
                     
                 })
             })
-        }, 3000)
+        }, 1000)
     
 }
 

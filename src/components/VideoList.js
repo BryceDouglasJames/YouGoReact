@@ -34,24 +34,25 @@ class VideoList extends Component{
                     var arr = null
                     arr = JSON.parse(text);
 
+                    console.log("Starting")
                     /*****Check for session timeout*****/
                     if(localStorage.getItem("SignedIn") === true){
+                        console.log("1")
                         this.props.setLogged(true)
                     }
-                    if(localStorage.getItem("Videos") !== null && arr.SessionTime % 2000 === 0){
+                    else if(localStorage.getItem("Currentuser") === ""){
+                        console.log("2")
                         this.props.Setobj(JSON.parse(localStorage.getItem("Videos")))
-                    }
-                    if(arr.SessionTime>=60000 || arr.SessionTime === "0"){
-                        console.log("AHHHH SHIT WE DONE")
-                        localStorage.removeItem("SignedIn")
-                        localStorage.removeItem("SessionTimeout")
-                        localStorage.removeItem("Currentuser")
-                        localStorage.removeItem("Videos")
+                        this.setState({novid:false})
                         this.props.setLogged(false)
                         this.props.setUser("")
                         this.props.setTime("")
-                        console.log(localStorage.getItem("Videos"))
-                    }else{
+                    }
+                    else if(arr.Searches !== null){
+                        localStorage.setItem("Videos", JSON.stringify(arr.Searches))
+                    }
+                    else{
+                        console.log("AYO")
                         localStorage.setItem("SessionTimeout", arr.SessionTime)
                     }       
 
@@ -59,18 +60,12 @@ class VideoList extends Component{
                     this.setState({loading: false})             
                 })
             })
-        }, 3000)
+        }, 300)
     }
 
     render(){
-        if(JSON.parse(localStorage.getItem("Videos")) === null){
-            this.setState({novid: true})
-        }else{
-            var tempVideoList = JSON.parse(localStorage.getItem("Videos"))
-            // /this.setState({novid: false})
-        }
-
-       
+        var tempVideoList = JSON.parse(localStorage.getItem("Videos"))
+    
         if(this.state.loading){
             return(
                 <>
@@ -84,7 +79,9 @@ class VideoList extends Component{
             return(
                 <div>
                     {(()=>{
-                        if(localStorage.getItem("SessionTimeout") === "0" && this.state.novid){
+                        
+                        if(this.props.loggedIn !== true && localStorage.getItem("SessionTimeout") === "0"){
+                            console.log("IM HERE 1")
                             return(
                                 <>  
                                     <div className = "m-auto p-2" style = {{backgroundColor:"#282c34", border: "none", textAlign: "center", color:"white", height: '100vh', minHeight: '100vh'}}>
@@ -101,61 +98,58 @@ class VideoList extends Component{
                                     </div>
                                 </>
                             )
-                            }else{
-                                if(localStorage.getItem("SignedIn") === false || localStorage.getItem("SignedIn") === null || localStorage.getItem("Currentuser") === ""){
-                                    this.setState({change: true})
-                                    this.props.setLogged(false)
-                                    this.setState({novid: true})
-                                }else if(this.props.videos !== null){
-                                    tempVideoList = JSON.parse(localStorage.getItem("Videos"))
-                                    if(tempVideoList !== null && tempVideoList[0]!==null && tempVideoList.length > 1){
-                                        return(
-                                            <>
-                                                <GlobalNav user = {this.props.user}></GlobalNav>
-                                                {this.props.videos.map(item =>{
-                                                    var youtube = "https://youtube.com/watch?v="
-                                                    var nail = "https://img.youtube.com/vi/"+item.VideoID+"/default.jpg"
-                                                    // /<Card.Link href={youtube + item.VideoID} >Card Link</Card.Link>
-                                                    return(
-                                                        <div className = "m-auto p-4" style = {{textAlign:"center"}}>
-                                                            <Card  className="m-auto" style={{ width: "70vw" }}>
-                                                                <Card.Body>
-                                                                    <Card.Title><p>{item.VideoTitle}</p></Card.Title>
-                                                    
-                                                                    <img className="p-3 m-auto" style={{width:"60vw"}} src = {nail} alt = "nun"/>
-                                                    
-                                                                    <Card.Subtitle className="mb-2 text-muted"><p></p></Card.Subtitle>
-
-                                                                    <Button  className = "m-auto p-2" style = {{fontSize:"20px"}} variant="light" onClick={()=>{window.open(youtube + item.VideoID)}}>
-                                                                        Watch this video
-                                                                    </Button>
-                                                                </Card.Body>
-                                                            </Card>
-                                                        </div>
-                                                    )
-                                                })}  
-                                            </>
-                                        )   
-                                    }else if (this.state.novid){
-                                        return( 
-                                            <>
-                                                <GlobalNav user = {this.props.user}></GlobalNav>
-                                                <div className = "m-auto p-2" style = {{backgroundColor:"#282c34", border: "none", textAlign: "center", color:"white", height: '100vh', minHeight: '100vh'}}>
-                                                    <br></br><br></br><br></br><br></br><br></br><br></br><br></br>
-                                                    <h3>You have no searches yet 🥺<br></br></h3>
-                                                    <div className="p-3 m-auto" style = {{backgroundColor:"#282c34", border: "none"}}>
-                                                    <Link to="/search">
-                                                        <Button variant="outline-light">
-                                                            Back to search
-                                                        </Button>
-                                                    </Link>
-                                                    <hr style={{color: "white",  width:"40vw", borderColor:"white"}} />
+                            }else{   
+                                if(tempVideoList !== null && tempVideoList.length >= 1){
+                                    console.log("IM HERE 2")
+                                    tempVideoList.sort(()=>Math.random() - Math.random())
+                                    return(
+                                        <>
+                                            <GlobalNav user = {this.props.user}></GlobalNav>
+                                            {tempVideoList.map(item =>{
+                                                var youtube = "https://youtube.com/watch?v="
+                                                var nail = "https://img.youtube.com/vi/"+item.VideoID+"/default.jpg"
+                                                // /<Card.Link href={youtube + item.VideoID} >Card Link</Card.Link>
+                                                return(
+                                                    <div className = "m-auto p-4" style = {{textAlign:"center", backgroundColor: "#282c34"}}>
+                                                        <Card  className="m-auto" style={{ width: "50vw"}}>
+                                                            <Card.Body>
+                                                                <Card.Title><p style ={{fontSize: "20px"}}>{item.VideoTitle}</p></Card.Title>
+                                                
+                                                                <img className="p-3 m-auto" style={{width:"40vw"}} src = {nail} alt = "nun"/>
+                                                
+                                                                <Card.Subtitle className="mb-2 text-muted"><p></p></Card.Subtitle>
+                                                                <Button  className = "m-auto p-2" style = {{fontSize:"15px"}} variant="light" onClick={()=>{window.open(youtube + item.VideoID)}}>
+                                                                    Watch this video
+                                                                </Button>
+                                                            </Card.Body>
+                                                        </Card>
                                                     </div>
+                                                )
+                                            })}  
+                                        </>
+                                    )   
+                                }else if (this.state.novid || localStorage.getItem("Videos") === null){
+                                    console.log("IM HERE 3")
+                                    //setTimeout(window.location.reload(),3000)
+                                    return( 
+                                        <>
+                                            <GlobalNav user = {this.props.user}></GlobalNav>
+                                            <div className = "m-auto p-2" style = {{backgroundColor:"#282c34", border: "none", textAlign: "center", color:"white", height: '100vh', minHeight: '100vh'}}>
+                                                <br></br><br></br><br></br><br></br><br></br><br></br><br></br>
+                                                <h3>You have no searches yet 🥺<br></br></h3>
+                                                <div className="p-3 m-auto" style = {{backgroundColor:"#282c34", border: "none"}}>
+                                                <Link to="/search">
+                                                    <Button variant="outline-light">
+                                                        Back to search
+                                                    </Button>
+                                                </Link>
+                                                <hr style={{color: "white",  width:"40vw", borderColor:"white"}} />
                                                 </div>
-                                            </>
-                                        )
-                                    }
+                                            </div>
+                                        </>
+                                    )
                                 }
+                                
                             }
                         }
                     )()}
